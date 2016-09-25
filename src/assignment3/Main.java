@@ -18,7 +18,6 @@ public class Main {
 
 	// static variables and constants only here.
 	public static Node<String> root;
-	public static ArrayList<String> BFSladder;
 	public static ArrayList<Queue> queue;
 	public static ArrayList<String> visitedWords;
 	public static Set<String> dict;
@@ -42,7 +41,7 @@ public class Main {
 		if (input.size() == 0) {
 			return;
 		}
-		
+
 		ArrayList<String> myladder = getWordLadderBFS(input.get(0),input.get(1));
 		input.set(0, input.get(0).toLowerCase());
 		input.set(1, input.get(1).toLowerCase());
@@ -59,7 +58,6 @@ public class Main {
 		// initialize your static variables or constants here.
 		// We will call this method before running our JUNIT tests. So call it
 		// only once at the start of main.
-		BFSladder = new ArrayList<String>(0);
 		root = new Node<String>();
 		dict = makeDictionary();
 		visitedWords = new ArrayList<String>(0);
@@ -97,7 +95,14 @@ public class Main {
 	}
 
 	public static ArrayList<String> getWordLadderBFS(String start, String end) {
-		boolean flag;
+		if(start.equals(end)){
+			ArrayList<String> ladder = new ArrayList<String>(0);
+			String rung = start.toLowerCase();
+			ladder.add(rung);
+			rung = end.toLowerCase();
+			ladder.add(rung);
+			return ladder;
+		}
 		root.data = start;
 		Queue block = new Queue(start, root);
 		queue.add(block);
@@ -107,11 +112,11 @@ public class Main {
 				ArrayList<String> ladder = buildLadder(block.node);
 				return ladder;
 			}
-			flag = nextWords(block.node);
+			nextWords(block.node);
 		}
 		return null;
 	}
-	
+
 	public static ArrayList<String> buildLadder(Node<String> node){
 		ArrayList<String> ladder = new ArrayList<String>(0);
 		while(node != null){
@@ -121,7 +126,7 @@ public class Main {
 		}
 		return ladder;
 	}
-	
+
 	public static boolean nextWords(Node<String> root){
 		char[] word = root.data.toCharArray();
 		visitedWords.add(root.data);
@@ -133,7 +138,7 @@ public class Main {
 				} else {
 					word[i]++;
 				}
-				String chkword = String.valueOf(word);				
+				String chkword = String.valueOf(word);
 				if (dict.contains(chkword)&&!visitedWords.contains(chkword)) {
 					Node<String> newnode = root.add(chkword);
 					visitedWords.add(chkword);
@@ -170,6 +175,4 @@ public class Main {
 			System.out.println(ladder.get(i));
 		}
 	}
-	// TODO
-	// Other private static methods here
 }
