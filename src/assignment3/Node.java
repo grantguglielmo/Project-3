@@ -25,5 +25,14 @@ public class Node<T> {
     	return child;
     }
     
+    public boolean childContain(T check){
+    	for(int i = 0; i < this.children.size(); i++){
+    		if(this.data == this.children.get(i).data){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     
 }
