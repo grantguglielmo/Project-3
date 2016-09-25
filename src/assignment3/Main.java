@@ -19,6 +19,8 @@ import java.io.*;
 public class Main {
 
 	// static variables and constants only here.
+	public static Node<String> root;
+	public static ArrayList<String> BFSladder;
 	public static ArrayList<String> visitedwords;
 	public static Set<String> dict;
 
@@ -41,14 +43,15 @@ public class Main {
 		if (input.size() == 0) {
 			return;
 		}
-		// ArrayList<String> BFSladder =
-		// getWordLadderBFS(input.get(0),input.get(1));
+		//ArrayList<String> myladder = getWordLadderBFS(input.get(0),input.get(1));
 	}
 
 	public static void initialize() {
 		// initialize your static variables or constants here.
 		// We will call this method before running our JUNIT tests. So call it
 		// only once at the start of main.
+		BFSladder = new ArrayList<String>(0);
+		root = new Node<String>();
 		dict = makeDictionary();
 		visitedwords = new ArrayList<String>(0);
 	}
@@ -84,14 +87,25 @@ public class Main {
 	}
 
 	public static ArrayList<String> getWordLadderBFS(String start, String end) {
-		ArrayList<String> ladder = new ArrayList<String>(0);
-		if (start.equals(end)) {
-			ladder.add(end);
-			return ladder;
-		}
-		visitedwords.add(start);
 		ArrayList<String> words = new ArrayList<String>(0);
+		if (start.equals(end)) {
+			BFSladder.add(start);
+			BFSladder.add(end);
+			return BFSladder;
+		}
+		root.data = start;
+		visitedwords.add(start);
+		boolean flag = nextWords(start, root);
+		if(!flag){
+			return null;
+		}
+
+		return null;
+	}
+	
+	public static boolean nextWords(String start, Node<String> root){
 		char[] word = start.toCharArray();
+		int len = 0;
 		for (int i = 0; i < start.length(); i++) {
 			for (int j = 0; j < 26; j++) {
 				if (word[i] == 'Z') {
@@ -101,18 +115,15 @@ public class Main {
 				}
 				String chkword = word.toString();
 				if (dict.contains(chkword)&&!visitedwords.contains(chkword)) {
-					words.add(chkword);
+					root.add(chkword);
+					len++;
 				}
 			}
 		}
-		if(words.size() == 0){
-			return null;
+		if(len == 0){
+			return false;
 		}
-		for(int i = 0; i < words.size(); i++){
-			
-		}
-
-		return null;
+		return true;
 	}
 
 	public static Set<String> makeDictionary() {
