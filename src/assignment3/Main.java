@@ -2,12 +2,10 @@
  * EE422C Project 3 submission by
  * Grant Guglielmo
  * gg25488
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
+ * Stephen Ma
+ * szm99
  * Slip days used: <0>
- * Git URL:
+ * Git URL: https://github.com/grantguglielmo/Project-3/
  * Fall 2016
  */
 
