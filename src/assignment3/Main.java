@@ -21,7 +21,7 @@ public class Main {
 	// static variables and constants only here.
 	public static Node<String> root;
 	public static ArrayList<String> BFSladder;
-	public static ArrayList<String> visitedwords;
+	public static ArrayList<String> visitedWords;
 	public static Set<String> dict;
 
 	public static void main(String[] args) throws Exception {
@@ -53,7 +53,7 @@ public class Main {
 		BFSladder = new ArrayList<String>(0);
 		root = new Node<String>();
 		dict = makeDictionary();
-		visitedwords = new ArrayList<String>(0);
+		visitedWords = new ArrayList<String>(0);
 	}
 
 	/**
@@ -63,16 +63,16 @@ public class Main {
 	 *         command is /quit, return empty ArrayList.
 	 */
 	public static ArrayList<String> parse(Scanner keyboard) {
-		ArrayList<String> inputlist = new ArrayList<String>(0);
+		ArrayList<String> inputList = new ArrayList<String>(0);
 		String input = keyboard.next();
 		if (input.equals("/quit")) {
-			return inputlist;
+			return inputList;
 		}
-		inputlist.add(input);
-		inputlist.add(keyboard.next());
-		inputlist.set(0, inputlist.get(0).toUpperCase());
-		inputlist.set(1, inputlist.get(1).toUpperCase());
-		return inputlist;
+		inputList.add(input);
+		inputList.add(keyboard.next());
+		inputList.set(0, inputList.get(0).toUpperCase());
+		inputList.set(1, inputList.get(1).toUpperCase());
+		return inputList;
 	}
 
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
@@ -94,7 +94,7 @@ public class Main {
 			return BFSladder;
 		}
 		root.data = start;
-		visitedwords.add(start);
+		visitedWords.add(start);
 		boolean flag = nextWords(start, root);
 		if(!flag){
 			return null;
@@ -114,7 +114,7 @@ public class Main {
 					word[i]++;
 				}
 				String chkword = word.toString();
-				if (dict.contains(chkword)&&!visitedwords.contains(chkword)) {
+				if (dict.contains(chkword)&&!visitedWords.contains(chkword)) {
 					root.add(chkword);
 					len++;
 				}
