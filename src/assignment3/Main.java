@@ -21,6 +21,7 @@ public class Main {
 	// static variables and constants only here.
 	public static Node<String> root;
 	public static ArrayList<String> BFSladder;
+	public static ArrayList<Queue> queue;
 	public static ArrayList<String> visitedWords;
 	public static Set<String> dict;
 
@@ -43,7 +44,17 @@ public class Main {
 		if (input.size() == 0) {
 			return;
 		}
-		//ArrayList<String> myladder = getWordLadderBFS(input.get(0),input.get(1));
+		
+		ArrayList<String> myladder = getWordLadderBFS(input.get(0),input.get(1));
+		input.set(0, input.get(0).toLowerCase());
+		input.set(1, input.get(1).toLowerCase());
+		if(myladder == null){
+			System.out.println("no word ladder can be found between "+input.get(0)+" and "+input.get(1)+".");
+		}
+		else{
+			System.out.println("a "+(myladder.size() - 2)+"-rung word ladder exists between "+input.get(0)+" and "+input.get(1)+".");
+			printLadder(myladder);
+		}
 	}
 
 	public static void initialize() {
@@ -54,6 +65,7 @@ public class Main {
 		root = new Node<String>();
 		dict = makeDictionary();
 		visitedWords = new ArrayList<String>(0);
+		queue = new ArrayList<Queue>(0);
 	}
 
 	/**
@@ -87,39 +99,34 @@ public class Main {
 	}
 
 	public static ArrayList<String> getWordLadderBFS(String start, String end) {
-		ArrayList<String> words = new ArrayList<String>(0);
-		if (start.equals(end)) {
-			BFSladder.add(start);
-			BFSladder.add(end);
-			return BFSladder;
-		}
+		boolean flag;
 		root.data = start;
-		visitedWords.add(start);
-		boolean flag = nextWords(root);
-		if(!flag){
-			return null;
-		}
-		if(root.childContain(end)){
-			BFSladder.add(start);
-			BFSladder.add(end);
-			return BFSladder;
-		}
-		
-		Node<String> node = root;
-		
-		while(true){
-			for(int i = 0; i < node.children.size(); i++){
-				flag = nextWords(node.children.get(i));
-				
+		Queue block = new Queue(start, root);
+		queue.add(block);
+		for(int i = 0; i < queue.size(); i++){
+			block = queue.get(i);
+			if(block.word.equals(end)){
+				ArrayList<String> ladder = buildLadder(block.node);
+				return ladder;
 			}
-			
+			flag = nextWords(block.node);
 		}
-		
 		return null;
+	}
+	
+	public static ArrayList<String> buildLadder(Node<String> node){
+		ArrayList<String> ladder = new ArrayList<String>(0);
+		while(node != null){
+			String rung = node.data.toLowerCase();
+			ladder.add(rung);
+			node = node.parent;
+		}
+		return ladder;
 	}
 	
 	public static boolean nextWords(Node<String> root){
 		char[] word = root.data.toCharArray();
+		visitedWords.add(root.data);
 		int len = 0;
 		for (int i = 0; i < root.data.length(); i++) {
 			for (int j = 0; j < 26; j++) {
@@ -128,10 +135,12 @@ public class Main {
 				} else {
 					word[i]++;
 				}
-				String chkword = word.toString();
+				String chkword = String.valueOf(word);				
 				if (dict.contains(chkword)&&!visitedWords.contains(chkword)) {
-					root.add(chkword);
+					Node<String> newnode = root.add(chkword);
 					visitedWords.add(chkword);
+					Queue block = new Queue(chkword, newnode);
+					queue.add(block);
 					len++;
 				}
 			}
@@ -159,7 +168,9 @@ public class Main {
 	}
 
 	public static void printLadder(ArrayList<String> ladder) {
-
+		for(int i = ladder.size() - 1; i >= 0; i--){
+			System.out.println(ladder.get(i));
+		}
 	}
 	// TODO
 	// Other private static methods here
