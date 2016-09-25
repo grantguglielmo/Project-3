@@ -95,22 +95,33 @@ public class Main {
 		}
 		root.data = start;
 		visitedWords.add(start);
-		boolean flag = nextWords(start, root);
+		boolean flag = nextWords(root);
 		if(!flag){
 			return null;
 		}
-		BFSrec(start,end,root);
+		if(root.childContain(end)){
+			BFSladder.add(start);
+			BFSladder.add(end);
+			return BFSladder;
+		}
+		
+		Node<String> node = root;
+		
+		while(true){
+			for(int i = 0; i < node.children.size(); i++){
+				flag = nextWords(node.children.get(i));
+				
+			}
+			
+		}
+		
 		return null;
 	}
 	
-	public static void BFSrec(String start, String end, Node<String> node){
-		
-	}
-	
-	public static boolean nextWords(String start, Node<String> root){
-		char[] word = start.toCharArray();
+	public static boolean nextWords(Node<String> root){
+		char[] word = root.data.toCharArray();
 		int len = 0;
-		for (int i = 0; i < start.length(); i++) {
+		for (int i = 0; i < root.data.length(); i++) {
 			for (int j = 0; j < 26; j++) {
 				if (word[i] == 'Z') {
 					word[i] = 'A';
@@ -120,6 +131,7 @@ public class Main {
 				String chkword = word.toString();
 				if (dict.contains(chkword)&&!visitedWords.contains(chkword)) {
 					root.add(chkword);
+					visitedWords.add(chkword);
 					len++;
 				}
 			}
