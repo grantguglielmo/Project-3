@@ -23,8 +23,8 @@ public class Main {
 	public static Set<String> dict;
 
 	public static void main(String[] args) throws Exception {
-		HashMap<String,ArrayList<String>> okay = graph();
-		System.out.println(okay);
+		HashMap<String,HashSet<String>> okay = graph();
+		System.out.println(okay.toString());
 		Scanner kb; // input Scanner for commands
 		PrintStream ps; // output file
 		// If arguments are specified, read/write from/to files instead of Std
@@ -66,9 +66,9 @@ public class Main {
 		queue = new ArrayList<Queue>(0);
 	}
 
-	public static HashMap<String, ArrayList<String>> graph() {
+	public static HashMap<String, HashSet<String>> graph() {
 		Set<String> dict = makeDictionary();
-		HashMap<String, ArrayList<String>> adjacencyList = new HashMap<String, ArrayList<String>>();
+		HashMap<String, HashSet<String>> adjacencyList = new HashMap<String, HashSet<String>>();
 		for (String s : dict) {
 			char[] c = s.toCharArray();
 			for (int j = 0; j < 5; j++) {
@@ -80,9 +80,9 @@ public class Main {
 						c[j]++;
 					}
 					String temp = String.valueOf(c);
-					if (dict.contains(temp)) {
+					if (dict.contains(temp) && !temp.equals(s)) {
 						if (!adjacencyList.containsKey(s)) {
-							adjacencyList.put(s,new ArrayList<String>());
+							adjacencyList.put(s,new HashSet<String>());
 						}
 						adjacencyList.get(s).add(temp);
 					}
