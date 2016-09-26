@@ -24,11 +24,13 @@ public class Main {
 	public static boolean noLadder = false;
 
 	public static void main(String[] args) throws Exception {
-
+		HashMap<String,HashSet<String>> okay = graph();
+		System.out.println(okay.toString());
 		Scanner kb; // input Scanner for commands
 		PrintStream ps; // output file
 		// If arguments are specified, read/write from/to files instead of Std
 		// IO.
+
 		if (args.length != 0) {
 			kb = new Scanner(new File(args[0]));
 			ps = new PrintStream(new File(args[1]));
@@ -58,6 +60,31 @@ public class Main {
 		queue = new ArrayList<Queue>(0);
 	}
 
+	public static HashMap<String, HashSet<String>> graph() {
+		Set<String> dict = makeDictionary();
+		HashMap<String, HashSet<String>> adjacencyList = new HashMap<String, HashSet<String>>();
+		for (String s : dict) {
+			char[] c = s.toCharArray();
+			for (int j = 0; j < 5; j++) {
+				for (int i = 0; i < 26; i++) {
+					if (c[j] == 'Z') {
+						c[j] = 'A';
+					}
+					else {
+						c[j]++;
+					}
+					String temp = String.valueOf(c);
+					if (dict.contains(temp) && !temp.equals(s)) {
+						if (!adjacencyList.containsKey(s)) {
+							adjacencyList.put(s,new HashSet<String>());
+						}
+						adjacencyList.get(s).add(temp);
+					}
+				}
+			}
+		}
+		return adjacencyList;
+	}
 	/**
 	 * @param keyboard
 	 *            Scanner connected to System.in
