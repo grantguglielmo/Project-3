@@ -1,3 +1,13 @@
+/* WORD LADDER Node.java
+ * EE422C Project 3 submission by
+ * Grant Guglielmo
+ * gg25488
+ * Stephen Ma
+ * szm99
+ * Slip days used: 0
+ * Git URL: https://github.com/grantguglielmo/Project-3/
+ * Fall 2016
+ */
 package assignment3;
 
 import java.util.ArrayList;
