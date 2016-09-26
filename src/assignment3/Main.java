@@ -23,11 +23,13 @@ public class Main {
 	public static Set<String> dict;
 
 	public static void main(String[] args) throws Exception {
-
+		HashMap<String,ArrayList<String>> okay = graph();
+		System.out.println(okay);
 		Scanner kb; // input Scanner for commands
 		PrintStream ps; // output file
 		// If arguments are specified, read/write from/to files instead of Std
 		// IO.
+
 		if (args.length != 0) {
 			kb = new Scanner(new File(args[0]));
 			ps = new PrintStream(new File(args[1]));
@@ -64,6 +66,31 @@ public class Main {
 		queue = new ArrayList<Queue>(0);
 	}
 
+	public static HashMap<String, ArrayList<String>> graph() {
+		Set<String> dict = makeDictionary();
+		HashMap<String, ArrayList<String>> adjacencyList = new HashMap<String, ArrayList<String>>();
+		for (String s : dict) {
+			char[] c = s.toCharArray();
+			for (int j = 0; j < 5; j++) {
+				for (int i = 0; i < 26; i++) {
+					if (c[j] == 'Z') {
+						c[j] = 'A';
+					}
+					else {
+						c[j]++;
+					}
+					String temp = String.valueOf(c);
+					if (dict.contains(temp)) {
+						if (!adjacencyList.containsKey(s)) {
+							adjacencyList.put(s,new ArrayList<String>());
+						}
+						adjacencyList.get(s).add(temp);
+					}
+				}
+			}
+		}
+		return adjacencyList;
+	}
 	/**
 	 * @param keyboard
 	 *            Scanner connected to System.in
