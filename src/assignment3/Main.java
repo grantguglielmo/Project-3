@@ -51,7 +51,9 @@ public class Main {
 		ArrayList<String> myladder = getWordLadderBFS(input.get(0), input.get(1));
 		printLadder(myladder);
 	}
-
+	/**
+	 * initialize all of our static variables
+	 */
 	public static void initialize() {
 		// initialize your static variables or constants here.
 		// We will call this method before running our JUNIT tests. So call it
@@ -141,9 +143,14 @@ public class Main {
 			return false;
 		}
 	}
-
+	/**
+	 * find a word ladder between start and end, using breadth first search method
+	 * @param start starting word
+	 * @param end ending word
+	 * @return word ladder between start-end
+	 */
 	public static ArrayList<String> getWordLadderBFS(String start, String end) {
-		if (start.equals(end)) {
+		if (start.equals(end)) {//trivial case
 			ArrayList<String> ladder = new ArrayList<String>(0);
 			String rung = start.toLowerCase();
 			ladder.add(rung);
@@ -154,15 +161,15 @@ public class Main {
 		root.data = start;
 		Queue block = new Queue(start, root);
 		queue.add(block);
-		for (int i = 0; i < queue.size(); i++) {
-			block = queue.get(i);
-			if (block.word.equals(end)) {
+		for (int i = 0; i < queue.size(); i++) {//continue loop while queue has elements unchecked
+			block = queue.get(i);//get next word
+			if (block.word.equals(end)) {//end if end word found
 				ArrayList<String> ladder = buildLadder(block.node);
 				return ladder;
 			}
-			nextWords(block.node);
+			nextWords(block.node);//continue adding mutated words to queue
 		}
-		ArrayList<String> ladder = new ArrayList<String>(0);
+		ArrayList<String> ladder = new ArrayList<String>(0);//case where no word ladder exist
 		String lower = start.toLowerCase();
 		ladder.add(lower);
 		lower = end.toLowerCase();
@@ -170,7 +177,11 @@ public class Main {
 		noLadder = true;
 		return ladder;
 	}
-
+	/**
+	 * build the word ladder in an array for a given node
+	 * @param node ending word to build ladder from
+	 * @return word ladder
+	 */
 	public static ArrayList<String> buildLadder(Node<String> node) {
 		ArrayList<String> ladder = new ArrayList<String>(0);
 		while (node != null) {
@@ -180,20 +191,24 @@ public class Main {
 		}
 		return ladder;
 	}
-
+	/**
+	 * add onto the queue all the legal perumutations of the given word
+	 * @param root given words node
+	 * @return true if >0 perumtations exist
+	 */
 	public static boolean nextWords(Node<String> root) {
 		char[] word = root.data.toCharArray();
 		visitedWords.add(root.data);
 		int len = 0;
-		for (int i = 0; i < root.data.length(); i++) {
-			for (int j = 0; j < 26; j++) {
-				if (word[i] == 'Z') {
+		for (int i = 0; i < root.data.length(); i++) {//go through all the letters of the word
+			for (int j = 0; j < 26; j++) {//and try every other letter of the alphabet
+				if (word[i] == 'Z') {//to see if any mutations of the word exist
 					word[i] = 'A';
 				} else {
 					word[i]++;
 				}
 				String chkword = String.valueOf(word);
-				if (dict.contains(chkword) && !visitedWords.contains(chkword)) {
+				if (dict.contains(chkword) && !visitedWords.contains(chkword)) {//check if newly created word is in the dictionary or not
 					Node<String> newnode = root.add(chkword);
 					visitedWords.add(chkword);
 					Queue block = new Queue(chkword, newnode);
@@ -223,16 +238,19 @@ public class Main {
 		}
 		return words;
 	}
-
+	/**
+	 * print the given word ladder
+	 * @param ladder array of strings that is the ladder to be printed
+	 */
 	public static void printLadder(ArrayList<String> ladder) {
-		if (noLadder) {
+		if (noLadder) {//static variable set to true if no ladder was found
 			System.out.println("no word ladder can be found between " + ladder.get(0) + " and "
 					+ ladder.get(1) + ".");
 			return;
 		}
 		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between " + ladder.get(ladder.size() - 1) + " and "
 				+ ladder.get(0) + ".");
-		for (int i = ladder.size() - 1; i >= 0; i--) {
+		for (int i = ladder.size() - 1; i >= 0; i--) {//print out words, they are stored in reverse order
 			System.out.println(ladder.get(i));
 		}
 	}
