@@ -24,6 +24,7 @@ public class Main {
 	public static Set<String> visitedDFS;
     public static HashMap<String,HashSet<String>> graph;
 	public static boolean noLadder = false;
+    public static Stack<String> stack;
 
 	public static void main(String[] args) throws Exception {
 		Scanner kb; // input Scanner for commands
@@ -61,6 +62,7 @@ public class Main {
 		visitedWords = new ArrayList<String>(0);
 		queue = new ArrayList<Queue>(0);
 		graph = graph();
+		stack = new Stack<String>();
 	}
 
 	public static HashMap<String, HashSet<String>> graph() {
@@ -119,9 +121,11 @@ public class Main {
 
 	public static boolean find(String start, String end) {
 		if (start == null) {
+			stack.pop();
 			return false;
 		}
 		visitedDFS.add(start);
+		stack.push(start);
 		if (start.equals(end)) {
 			return true;
 		}
