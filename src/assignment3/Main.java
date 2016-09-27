@@ -21,10 +21,10 @@ public class Main {
 	public static ArrayList<Queue> queue;
 	public static ArrayList<String> visitedWords;
 	public static Set<String> dict;
+	public static Set<String> visitedDFS;
+    public static HashMap<String,HashSet<String>> graph;
 
 	public static void main(String[] args) throws Exception {
-		HashMap<String,HashSet<String>> okay = graph();
-		System.out.println(okay.toString());
 		Scanner kb; // input Scanner for commands
 		PrintStream ps; // output file
 		// If arguments are specified, read/write from/to files instead of Std
@@ -43,6 +43,8 @@ public class Main {
 		if (input.size() == 0) {
 			return;
 		}
+
+		ArrayList<String> dfsTest = getWordLadderDFS(input.get(0),input.get(1));
 
 		ArrayList<String> myladder = getWordLadderBFS(input.get(0),input.get(1));
 		input.set(0, input.get(0).toLowerCase());
@@ -64,6 +66,7 @@ public class Main {
 		dict = makeDictionary();
 		visitedWords = new ArrayList<String>(0);
 		queue = new ArrayList<Queue>(0);
+		graph = graph();
 	}
 
 	public static HashMap<String, HashSet<String>> graph() {
@@ -115,10 +118,30 @@ public class Main {
 		// Returned list should be ordered start to end. Include start and end.
 		// Return empty list if no ladder.
 		// TODO some code
-		Set<String> dict = makeDictionary();
-		// TODO more code
+		visitedDFS = new HashSet<String>();
+		boolean bool = find(start, end);
+        return null;
+	}
 
-		return null; // replace this line later with real return
+	public static boolean find(String start, String end) {
+		if (start == null) {
+			return false;
+		}
+		visitedDFS.add(start);
+		if (start.equals(end)) {
+			return true;
+		}
+		else {
+			for (String s : graph.get(start)) {
+				if (!visitedDFS.contains(s)) {
+					boolean found = find(s, end);
+					if (found) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 	}
 
 	public static ArrayList<String> getWordLadderBFS(String start, String end) {
