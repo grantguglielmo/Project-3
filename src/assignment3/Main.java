@@ -4,7 +4,7 @@
  * gg25488
  * Stephen Ma
  * szm99
- * Slip days used: <0>
+ * Slip days used: 0
  * Git URL: https://github.com/grantguglielmo/Project-3/
  * Fall 2016
  */
@@ -23,6 +23,7 @@ public class Main {
 	public static Set<String> dict;
 	public static Set<String> visitedDFS;
     public static HashMap<String,HashSet<String>> graph;
+	public static boolean noLadder = false;
 
 	public static void main(String[] args) throws Exception {
 		Scanner kb; // input Scanner for commands
@@ -46,22 +47,15 @@ public class Main {
 
 		ArrayList<String> dfsTest = getWordLadderDFS(input.get(0),input.get(1));
 
-		ArrayList<String> myladder = getWordLadderBFS(input.get(0),input.get(1));
-		input.set(0, input.get(0).toLowerCase());
-		input.set(1, input.get(1).toLowerCase());
-		if(myladder == null){
-			System.out.println("no word ladder can be found between "+input.get(0)+" and "+input.get(1)+".");
-		}
-		else{
-			System.out.println("a "+(myladder.size() - 2)+"-rung word ladder exists between "+input.get(0)+" and "+input.get(1)+".");
-			printLadder(myladder);
-		}
+		ArrayList<String> myladder = getWordLadderBFS(input.get(0), input.get(1));
+		printLadder(myladder);
 	}
 
 	public static void initialize() {
 		// initialize your static variables or constants here.
 		// We will call this method before running our JUNIT tests. So call it
 		// only once at the start of main.
+		noLadder = false;
 		root = new Node<String>();
 		dict = makeDictionary();
 		visitedWords = new ArrayList<String>(0);
@@ -145,7 +139,7 @@ public class Main {
 	}
 
 	public static ArrayList<String> getWordLadderBFS(String start, String end) {
-		if(start.equals(end)){
+		if (start.equals(end)) {
 			ArrayList<String> ladder = new ArrayList<String>(0);
 			String rung = start.toLowerCase();
 			ladder.add(rung);
@@ -156,20 +150,26 @@ public class Main {
 		root.data = start;
 		Queue block = new Queue(start, root);
 		queue.add(block);
-		for(int i = 0; i < queue.size(); i++){
+		for (int i = 0; i < queue.size(); i++) {
 			block = queue.get(i);
-			if(block.word.equals(end)){
+			if (block.word.equals(end)) {
 				ArrayList<String> ladder = buildLadder(block.node);
 				return ladder;
 			}
 			nextWords(block.node);
 		}
-		return null;
+		ArrayList<String> ladder = new ArrayList<String>(0);
+		String lower = start.toLowerCase();
+		ladder.add(lower);
+		lower = end.toLowerCase();
+		ladder.add(lower);
+		noLadder = true;
+		return ladder;
 	}
 
-	public static ArrayList<String> buildLadder(Node<String> node){
+	public static ArrayList<String> buildLadder(Node<String> node) {
 		ArrayList<String> ladder = new ArrayList<String>(0);
-		while(node != null){
+		while (node != null) {
 			String rung = node.data.toLowerCase();
 			ladder.add(rung);
 			node = node.parent;
@@ -177,7 +177,7 @@ public class Main {
 		return ladder;
 	}
 
-	public static boolean nextWords(Node<String> root){
+	public static boolean nextWords(Node<String> root) {
 		char[] word = root.data.toCharArray();
 		visitedWords.add(root.data);
 		int len = 0;
@@ -189,7 +189,7 @@ public class Main {
 					word[i]++;
 				}
 				String chkword = String.valueOf(word);
-				if (dict.contains(chkword)&&!visitedWords.contains(chkword)) {
+				if (dict.contains(chkword) && !visitedWords.contains(chkword)) {
 					Node<String> newnode = root.add(chkword);
 					visitedWords.add(chkword);
 					Queue block = new Queue(chkword, newnode);
@@ -198,7 +198,7 @@ public class Main {
 				}
 			}
 		}
-		if(len == 0){
+		if (len == 0) {
 			return false;
 		}
 		return true;
@@ -221,7 +221,14 @@ public class Main {
 	}
 
 	public static void printLadder(ArrayList<String> ladder) {
-		for(int i = ladder.size() - 1; i >= 0; i--){
+		if (noLadder) {
+			System.out.println("no word ladder can be found between " + ladder.get(0) + " and "
+					+ ladder.get(1) + ".");
+			return;
+		}
+		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between " + ladder.get(ladder.size() - 1) + " and "
+				+ ladder.get(0) + ".");
+		for (int i = ladder.size() - 1; i >= 0; i--) {
 			System.out.println(ladder.get(i));
 		}
 	}
