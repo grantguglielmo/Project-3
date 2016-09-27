@@ -47,7 +47,7 @@ public class Main {
 		}
 
 		ArrayList<String> dfsTest = getWordLadderDFS(input.get(0),input.get(1));
-
+		printLadder(dfsTest);
 		ArrayList<String> myladder = getWordLadderBFS(input.get(0), input.get(1));
 		printLadder(myladder);
 	}
@@ -118,7 +118,12 @@ public class Main {
 		// TODO some code
 		visitedDFS = new HashSet<String>();
 		boolean bool = find(start, end);
-        return null;
+        if (!bool) {
+			noLadder = true;
+		}
+        ArrayList<String> returnThis = new ArrayList(stack);
+		Collections.reverse(returnThis);
+		return returnThis;
 	}
 
 	public static boolean find(String start, String end) {
@@ -132,6 +137,10 @@ public class Main {
 			return true;
 		}
 		else {
+			if (graph.get(start).contains(end)) {
+				stack.push(end);
+				return true;
+			}
 			for (String s : graph.get(start)) {
 				if (!visitedDFS.contains(s)) {
 					boolean found = find(s, end);
@@ -140,6 +149,7 @@ public class Main {
 					}
 				}
 			}
+			stack.pop();
 			return false;
 		}
 	}
