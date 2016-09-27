@@ -119,7 +119,11 @@ public class Main {
 		visitedDFS = new HashSet<String>();
 		boolean bool = find(start, end);
         if (!bool) {
+        	ArrayList<String> returnThis = new ArrayList<String>(0);
+        	returnThis.add(end);
+        	returnThis.add(start);
 			noLadder = true;
+			return returnThis;
 		}
         ArrayList<String> returnThis = new ArrayList(stack);
 		Collections.reverse(returnThis);
@@ -180,9 +184,9 @@ public class Main {
 			nextWords(block.node);//continue adding mutated words to queue
 		}
 		ArrayList<String> ladder = new ArrayList<String>(0);//case where no word ladder exist
-		String lower = start.toLowerCase();
+		String lower = end.toLowerCase();
 		ladder.add(lower);
-		lower = end.toLowerCase();
+		lower = start.toLowerCase();
 		ladder.add(lower);
 		noLadder = true;
 		return ladder;
@@ -254,14 +258,14 @@ public class Main {
 	 */
 	public static void printLadder(ArrayList<String> ladder) {
 		if (noLadder) {//static variable set to true if no ladder was found
-			System.out.println("no word ladder can be found between " + ladder.get(0) + " and "
-					+ ladder.get(1) + ".");
+			System.out.println("no word ladder can be found between " + ladder.get(1).toLowerCase() + " and "
+					+ ladder.get(0).toLowerCase() + ".");
 			return;
 		}
-		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between " + ladder.get(ladder.size() - 1) + " and "
-				+ ladder.get(0) + ".");
+		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between " + ladder.get(ladder.size() - 1).toLowerCase() + " and "
+				+ ladder.get(0).toLowerCase() + ".");
 		for (int i = ladder.size() - 1; i >= 0; i--) {//print out words, they are stored in reverse order
-			System.out.println(ladder.get(i));
+			System.out.println(ladder.get(i).toLowerCase());
 		}
 	}
 }
