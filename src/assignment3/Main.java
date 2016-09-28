@@ -46,8 +46,8 @@ public class Main {
 			return;
 		}
 
-		//ArrayList<String> dfsTest = getWordLadderDFS(input.get(0),input.get(1));
-		//printLadder(dfsTest);
+		ArrayList<String> dfsTest = getWordLadderDFS(input.get(0),input.get(1));
+		printLadder(dfsTest);
 		ArrayList<String> myladder = getWordLadderBFS(input.get(0), input.get(1));
 		printLadder(myladder);
 	}
@@ -67,7 +67,6 @@ public class Main {
 	}
 
 	public static HashMap<String, HashSet<String>> graph() {
-		Set<String> dict = makeDictionary();
 		HashMap<String, HashSet<String>> adjacencyList = new HashMap<String, HashSet<String>>();
 		for (String s : dict) {
 			char[] c = s.toCharArray();
@@ -121,13 +120,12 @@ public class Main {
 		boolean bool = find(start, end);
         if (!bool) {
         	ArrayList<String> returnThis = new ArrayList<String>(0);
-        	returnThis.add(end);
         	returnThis.add(start);
+        	returnThis.add(end);
         	noLadder = true;
 			return returnThis;
 		}
         ArrayList<String> returnThis = new ArrayList(stack);
-		Collections.reverse(returnThis);
 		return returnThis;
 	}
 
@@ -184,6 +182,7 @@ public class Main {
 			block = queue.get(i);//get next word
 			if (block.word.equals(end)) {//end if end word found
 				ArrayList<String> ladder = buildLadder(block.node);
+				Collections.reverse(ladder);
 				return ladder;
 			}
 			nextWords(block.node);//continue adding mutated words to queue
@@ -194,6 +193,7 @@ public class Main {
 		lower = start.toLowerCase();
 		ladder.add(lower);
 		noLadder = true;
+		Collections.reverse(ladder);
 		return ladder;
 	}
 	/**
@@ -263,13 +263,13 @@ public class Main {
 	 */
 	public static void printLadder(ArrayList<String> ladder) {
 		if (noLadder) {//static variable set to true if no ladder was found
-			System.out.println("no word ladder can be found between " + ladder.get(1).toLowerCase() + " and "
-					+ ladder.get(0).toLowerCase() + ".");
+			System.out.println("no word ladder can be found between " + ladder.get(0).toLowerCase() + " and "
+					+ ladder.get(1).toLowerCase() + ".");
 			return;
 		}
-		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between " + ladder.get(ladder.size() - 1).toLowerCase() + " and "
-				+ ladder.get(0).toLowerCase() + ".");
-		for (int i = ladder.size() - 1; i >= 0; i--) {//print out words, they are stored in reverse order
+		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between " + ladder.get(0).toLowerCase() + " and "
+				+ ladder.get(ladder.size() - 1).toLowerCase() + ".");
+		for (int i = 0; i < ladder.size(); i++) {//print out words, they are stored in reverse order
 			System.out.println(ladder.get(i).toLowerCase());
 		}
 	}
