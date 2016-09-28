@@ -19,7 +19,7 @@ public class Main {
 	// static variables and constants only here.
 	public static Node<String> root;
 	public static ArrayList<Queue> queue;
-	public static ArrayList<String> visitedWords;
+	public static Set<String> visitedWords;
 	public static Set<String> dict;
 	public static Set<String> visitedDFS;
     public static HashMap<String,HashSet<String>> graph;
@@ -61,7 +61,7 @@ public class Main {
 		noLadder = false;
 		root = new Node<String>();
 		dict = makeDictionary();
-		visitedWords = new ArrayList<String>(0);
+		visitedWords = new HashSet<String>(0);
 		queue = new ArrayList<Queue>(0);
 		stack = new Stack<String>();
 	}
