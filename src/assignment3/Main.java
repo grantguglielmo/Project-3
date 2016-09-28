@@ -141,7 +141,7 @@ public class Main {
 		if (start.equals(end)) {
 			return true;
 		}
-		else {
+		else if (graph.get(start) != null){
 			if (graph.get(start).contains(end)) {
 				stack.push(end);
 				return true;
@@ -155,6 +155,9 @@ public class Main {
 				}
 			}
 			stack.pop();
+			return false;
+		}
+		else {
 			return false;
 		}
 	}
