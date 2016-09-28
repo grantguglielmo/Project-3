@@ -63,7 +63,6 @@ public class Main {
 		dict = makeDictionary();
 		visitedWords = new ArrayList<String>(0);
 		queue = new ArrayList<Queue>(0);
-		graph = graph();
 		stack = new Stack<String>();
 	}
 
@@ -116,13 +115,14 @@ public class Main {
 		// Returned list should be ordered start to end. Include start and end.
 		// Return empty list if no ladder.
 		// TODO some code
+		initialize();
+		graph = graph();
 		visitedDFS = new HashSet<String>();
 		boolean bool = find(start, end);
         if (!bool) {
         	ArrayList<String> returnThis = new ArrayList<String>(0);
         	returnThis.add(end);
         	returnThis.add(start);
-			noLadder = true;
 			return returnThis;
 		}
         ArrayList<String> returnThis = new ArrayList(stack);
@@ -173,6 +173,7 @@ public class Main {
 			ladder.add(rung);
 			return ladder;
 		}
+		initialize();
 		root.data = start;
 		Queue block = new Queue(start, root);
 		queue.add(block);
@@ -190,7 +191,6 @@ public class Main {
 		ladder.add(lower);
 		lower = start.toLowerCase();
 		ladder.add(lower);
-		noLadder = true;
 		return ladder;
 	}
 	/**
