@@ -46,8 +46,8 @@ public class Main {
 			return;
 		}
 
-		ArrayList<String> dfsTest = getWordLadderDFS(input.get(0),input.get(1));
-		printLadder(dfsTest);
+		//ArrayList<String> dfsTest = getWordLadderDFS(input.get(0),input.get(1));
+		//printLadder(dfsTest);
 		ArrayList<String> myladder = getWordLadderBFS(input.get(0), input.get(1));
 		printLadder(myladder);
 	}
@@ -123,11 +123,11 @@ public class Main {
         	ArrayList<String> returnThis = new ArrayList<String>(0);
         	returnThis.add(end);
         	returnThis.add(start);
+        	noLadder = true;
 			return returnThis;
 		}
         ArrayList<String> returnThis = new ArrayList(stack);
 		Collections.reverse(returnThis);
-		noLadder = false;
 		return returnThis;
 	}
 
@@ -181,7 +181,6 @@ public class Main {
 			block = queue.get(i);//get next word
 			if (block.word.equals(end)) {//end if end word found
 				ArrayList<String> ladder = buildLadder(block.node);
-				noLadder = false;
 				return ladder;
 			}
 			nextWords(block.node);//continue adding mutated words to queue
@@ -191,6 +190,7 @@ public class Main {
 		ladder.add(lower);
 		lower = start.toLowerCase();
 		ladder.add(lower);
+		noLadder = true;
 		return ladder;
 	}
 	/**
