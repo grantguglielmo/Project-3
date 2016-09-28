@@ -127,6 +127,7 @@ public class Main {
 		}
         ArrayList<String> returnThis = new ArrayList(stack);
 		Collections.reverse(returnThis);
+		noLadder = false;
 		return returnThis;
 	}
 
@@ -179,6 +180,7 @@ public class Main {
 			block = queue.get(i);//get next word
 			if (block.word.equals(end)) {//end if end word found
 				ArrayList<String> ladder = buildLadder(block.node);
+				noLadder = false;
 				return ladder;
 			}
 			nextWords(block.node);//continue adding mutated words to queue
