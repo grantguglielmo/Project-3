@@ -46,9 +46,6 @@ public class Main {
         }
         initialize();
         ArrayList<String> input = parse(kb);
-        if (input.size() == 0) {
-            return;
-        }
         input1 = input.get(0);
         input2 = input.get(1);
         ArrayList<String> dfsTest = getWordLadderDFS(input.get(0), input.get(1));
@@ -102,23 +99,24 @@ public class Main {
         return adjacencyList;
     }
 
-    /**
-     * @param keyboard Scanner connected to System.in
-     * @return ArrayList of 2 Strings containing start word and end word. If
-     * command is /quit, return empty ArrayList.
-     */
-    public static ArrayList<String> parse(Scanner keyboard) {
-        ArrayList<String> inputList = new ArrayList<String>(0);
-        String input = keyboard.next();
-        if (input.equals("/quit")) {
-            System.exit(1);
-        }
-        inputList.add(input);
-        inputList.add(keyboard.next());
-        inputList.set(0, inputList.get(0).toUpperCase());
-        inputList.set(1, inputList.get(1).toUpperCase());
-        return inputList;
-    }
+	/**
+	 * @param keyboard
+	 *            Scanner connected to System.in
+	 * @return ArrayList of 2 Strings containing start word and end word. If
+	 *         command is /quit, return empty ArrayList.
+	 */
+	public static ArrayList<String> parse(Scanner keyboard) {
+		ArrayList<String> inputList = new ArrayList<String>(0);
+		String input = keyboard.next();
+		if (input.equals("/quit")) {
+			System.exit(0);
+		}
+		inputList.add(input);
+		inputList.add(keyboard.next());
+		inputList.set(0, inputList.get(0).toUpperCase());
+		inputList.set(1, inputList.get(1).toUpperCase());
+		return inputList;
+	}
 
     /**
      * Implements the depth first search algorithm to find a word ladder
@@ -146,9 +144,6 @@ public class Main {
             }
         }
         if (!bool) {
-            ArrayList<String> returnThis = new ArrayList<String>(0);
-            returnThis.add(start);
-            returnThis.add(end);
             noLadder = true;
             return null;
         }
@@ -259,14 +254,7 @@ public class Main {
             }
             nextWords(block.node);// continue adding mutated words to queue
         }
-        ArrayList<String> ladder = new ArrayList<String>(0);// case where no
-        // word ladder exist
-        String lower = end.toLowerCase();
-        ladder.add(lower);
-        lower = start.toLowerCase();
-        ladder.add(lower);
         noLadder = true;
-        Collections.reverse(ladder);
         return null;
     }
 
