@@ -106,7 +106,7 @@ public class Main {
 		ArrayList<String> inputList = new ArrayList<String>(0);
 		String input = keyboard.next();
 		if (input.equals("/quit")) {
-			System.exit(1);
+			System.exit(0);
 		}
 		inputList.add(input);
 		inputList.add(keyboard.next());
