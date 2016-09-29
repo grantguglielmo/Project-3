@@ -25,6 +25,7 @@ public class Main {
     public static HashMap<String,HashSet<String>> graph;
 	public static boolean noLadder = false;
     public static Stack<String> stack;
+    public static String endWord;
 
 	public static void main(String[] args) throws Exception {
 		Scanner kb; // input Scanner for commands
@@ -100,7 +101,7 @@ public class Main {
 		ArrayList<String> inputList = new ArrayList<String>(0);
 		String input = keyboard.next();
 		if (input.equals("/quit")) {
-			return inputList;
+			System.exit(1);
 		}
 		inputList.add(input);
 		inputList.add(keyboard.next());
@@ -117,7 +118,8 @@ public class Main {
 		initialize();
 		graph = graph();
 		visitedDFS = new HashSet<String>();
-		boolean bool = find(start, end);
+		endWord = end;
+		boolean bool = find(start);
         if (!bool) {
         	ArrayList<String> returnThis = new ArrayList<String>(0);
         	returnThis.add(start);
@@ -129,24 +131,24 @@ public class Main {
 		return returnThis;
 	}
 
-	public static boolean find(String start, String end) {
+	public static boolean find(String start) {
 		if (start == null) {
 			stack.pop();
 			return false;
 		}
 		visitedDFS.add(start);
 		stack.push(start);
-		if (start.equals(end)) {
+		if (start.equals(endWord)) {
 			return true;
 		}
 		else if (graph.get(start) != null){
-			if (graph.get(start).contains(end)) {
-				stack.push(end);
+			if (graph.get(start).contains(endWord)) {
+				stack.push(endWord);
 				return true;
 			}
 			for (String s : graph.get(start)) {
 				if (!visitedDFS.contains(s)) {
-					boolean found = find(s, end);
+					boolean found = find(s);
 					if (found) {
 						return true;
 					}
