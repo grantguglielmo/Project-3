@@ -27,6 +27,8 @@ public class Main {
 	public static Stack<String> stack;
 	public static String endWord;
 	public static boolean flag;
+	public static String input1;
+	public static String input2;
 
 	public static void main(String[] args) throws Exception {
 		Scanner kb; // input Scanner for commands
@@ -47,7 +49,8 @@ public class Main {
 		if (input.size() == 0) {
 			return;
 		}
-
+		input1=input.get(0);
+		input2=input.get(1);
 		ArrayList<String> dfsTest = getWordLadderDFS(input.get(0), input.get(1));
 		printLadder(dfsTest);
 		ArrayList<String> myladder = getWordLadderBFS(input.get(0), input.get(1));
@@ -138,7 +141,7 @@ public class Main {
 			returnThis.add(start);
 			returnThis.add(end);
 			noLadder = true;
-			return returnThis;
+			return null;
 		}
 		ArrayList<String> returnThis = new ArrayList<String>(stack);
 		return returnThis;
@@ -244,7 +247,7 @@ public class Main {
 		ladder.add(lower);
 		noLadder = true;
 		Collections.reverse(ladder);
-		return ladder;
+		return null;
 	}
 
 	/**
@@ -334,9 +337,9 @@ public class Main {
 	 *            array of strings that is the ladder to be printed
 	 */
 	public static void printLadder(ArrayList<String> ladder) {
-		if (noLadder) {// static variable set to true if no ladder was found
-			System.out.println("no word ladder can be found between " + ladder.get(0).toLowerCase() + " and "
-					+ ladder.get(1).toLowerCase() + ".");
+		if (ladder == null) {// static variable set to true if no ladder was found
+			System.out.println("no word ladder can be found between " + input1.toLowerCase() + " and "
+					+ input2.toLowerCase() + ".");
 			return;
 		}
 		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between "
