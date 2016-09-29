@@ -22,10 +22,11 @@ public class Main {
 	public static Set<String> visitedWords;
 	public static Set<String> dict;
 	public static Set<String> visitedDFS;
-    public static HashMap<String,HashSet<String>> graph;
+	public static HashMap<String, HashSet<String>> graph;
 	public static boolean noLadder = false;
-    public static Stack<String> stack;
-    public static String endWord;
+	public static Stack<String> stack;
+	public static String endWord;
+	public static boolean flag;
 
 	public static void main(String[] args) throws Exception {
 		Scanner kb; // input Scanner for commands
@@ -47,11 +48,12 @@ public class Main {
 			return;
 		}
 
-		ArrayList<String> dfsTest = getWordLadderDFS(input.get(0),input.get(1));
+		ArrayList<String> dfsTest = getWordLadderDFS(input.get(0), input.get(1));
 		printLadder(dfsTest);
 		ArrayList<String> myladder = getWordLadderBFS(input.get(0), input.get(1));
 		printLadder(myladder);
 	}
+
 	/**
 	 * initialize all of our static variables
 	 */
@@ -75,14 +77,13 @@ public class Main {
 				for (int i = 0; i < 26; i++) {
 					if (c[j] == 'Z') {
 						c[j] = 'A';
-					}
-					else {
+					} else {
 						c[j]++;
 					}
 					String temp = String.valueOf(c);
 					if (dict.contains(temp) && !temp.equals(s)) {
 						if (!adjacencyList.containsKey(s)) {
-							adjacencyList.put(s,new HashSet<String>());
+							adjacencyList.put(s, new HashSet<String>());
 						}
 						adjacencyList.get(s).add(temp);
 					}
@@ -91,6 +92,7 @@ public class Main {
 		}
 		return adjacencyList;
 	}
+
 	/**
 	 * @param keyboard
 	 *            Scanner connected to System.in
@@ -119,56 +121,100 @@ public class Main {
 		graph = graph();
 		visitedDFS = new HashSet<String>();
 		endWord = end;
+		flag = false;
 		boolean bool = find(start);
-        if (!bool) {
-        	ArrayList<String> returnThis = new ArrayList<String>(0);
-        	returnThis.add(start);
-        	returnThis.add(end);
-        	noLadder = true;
+		if (flag) {
+			endWord = start;
+			flag = false;
+			bool = find(end);
+			if (bool) {
+				ArrayList<String> returnThis = new ArrayList<String>(stack);
+				Collections.reverse(returnThis);
+				return returnThis;
+			}
+		}
+		if (!bool) {
+			ArrayList<String> returnThis = new ArrayList<String>(0);
+			returnThis.add(start);
+			returnThis.add(end);
+			noLadder = true;
 			return returnThis;
 		}
-        ArrayList<String> returnThis = new ArrayList(stack);
+		ArrayList<String> returnThis = new ArrayList<String>(stack);
 		return returnThis;
 	}
 
 	public static boolean find(String start) {
-		if (start == null) {
-			stack.pop();
-			return false;
-		}
-		visitedDFS.add(start);
-		stack.push(start);
-		if (start.equals(endWord)) {
-			return true;
-		}
-		else if (graph.get(start) != null){
-			if (graph.get(start).contains(endWord)) {
-				stack.push(endWord);
-				return true;
+		try {
+			if (start == null) {
+				stack.pop();
+				return false;
 			}
-			for (String s : graph.get(start)) {
-				if (!visitedDFS.contains(s)) {
-					boolean found = find(s);
+			visitedDFS.add(start);
+			stack.push(start);
+			if (start.equals(endWord)) {
+				return true;
+			} else if (graph.get(start) != null) {
+				if (graph.get(start).contains(endWord)) {
+					stack.push(endWord);
+					return true;
+				}
+				String best = bestWord(start);
+				if (best != null && !visitedDFS.contains(best)) {
+					boolean found = find(best);
 					if (found) {
 						return true;
 					}
 				}
+				for (String s : graph.get(start)) {
+					if (!visitedDFS.contains(s)) {
+						boolean found = find(s);
+						if (found) {
+							return true;
+						}
+					}
+				}
+				stack.pop();
+				return false;
+			} else {
+				return false;
 			}
-			stack.pop();
-			return false;
-		}
-		else {
+		} catch (StackOverflowError e) {
+			flag = true;
 			return false;
 		}
 	}
+
+	public static String bestWord(String start) {
+		char[] b = endWord.toCharArray();
+		int count;
+		for (String s : graph.get(start)) {
+			count = 0;
+			char[] a = s.toCharArray();
+			for (int i = 0; i < 5; i++) {
+				if (a[i] == b[i]) {
+					count++;
+				}
+			}
+			if (count == 3) {
+				return s;
+			}
+		}
+		return null;
+	}
+
 	/**
-	 * find a word ladder between start and end, using breadth first search method
-	 * @param start starting word
-	 * @param end ending word
+	 * find a word ladder between start and end, using breadth first search
+	 * method
+	 * 
+	 * @param start
+	 *            starting word
+	 * @param end
+	 *            ending word
 	 * @return word ladder between start-end
 	 */
 	public static ArrayList<String> getWordLadderBFS(String start, String end) {
-		if (start.equals(end)) {//trivial case
+		if (start.equals(end)) {// trivial case
 			ArrayList<String> ladder = new ArrayList<String>(0);
 			String rung = start.toLowerCase();
 			ladder.add(rung);
@@ -180,16 +226,18 @@ public class Main {
 		root.data = start;
 		Queue block = new Queue(start, root);
 		queue.add(block);
-		for (int i = 0; i < queue.size(); i++) {//continue loop while queue has elements unchecked
-			block = queue.get(i);//get next word
-			if (block.word.equals(end)) {//end if end word found
+		for (int i = 0; i < queue.size(); i++) {// continue loop while queue has
+												// elements unchecked
+			block = queue.get(i);// get next word
+			if (block.word.equals(end)) {// end if end word found
 				ArrayList<String> ladder = buildLadder(block.node);
 				Collections.reverse(ladder);
 				return ladder;
 			}
-			nextWords(block.node);//continue adding mutated words to queue
+			nextWords(block.node);// continue adding mutated words to queue
 		}
-		ArrayList<String> ladder = new ArrayList<String>(0);//case where no word ladder exist
+		ArrayList<String> ladder = new ArrayList<String>(0);// case where no
+															// word ladder exist
 		String lower = end.toLowerCase();
 		ladder.add(lower);
 		lower = start.toLowerCase();
@@ -198,9 +246,12 @@ public class Main {
 		Collections.reverse(ladder);
 		return ladder;
 	}
+
 	/**
 	 * build the word ladder in an array for a given node
-	 * @param node ending word to build ladder from
+	 * 
+	 * @param node
+	 *            ending word to build ladder from
 	 * @return word ladder
 	 */
 	public static ArrayList<String> buildLadder(Node<String> node) {
@@ -212,24 +263,40 @@ public class Main {
 		}
 		return ladder;
 	}
+
 	/**
 	 * add onto the queue all the legal perumutations of the given word
-	 * @param root given words node
+	 * 
+	 * @param root
+	 *            given words node
 	 * @return true if >0 perumtations exist
 	 */
 	public static boolean nextWords(Node<String> root) {
 		char[] word = root.data.toCharArray();
 		visitedWords.add(root.data);
 		int len = 0;
-		for (int i = 0; i < root.data.length(); i++) {//go through all the letters of the word
-			for (int j = 0; j < 26; j++) {//and try every other letter of the alphabet
-				if (word[i] == 'Z') {//to see if any mutations of the word exist
+		for (int i = 0; i < root.data.length(); i++) {// go through all the
+														// letters of the word
+			for (int j = 0; j < 26; j++) {// and try every other letter of the
+											// alphabet
+				if (word[i] == 'Z') {// to see if any mutations of the word
+										// exist
 					word[i] = 'A';
 				} else {
 					word[i]++;
 				}
 				String chkword = String.valueOf(word);
-				if (dict.contains(chkword) && !visitedWords.contains(chkword)) {//check if newly created word is in the dictionary or not
+				if (dict.contains(chkword) && !visitedWords.contains(chkword)) {// check
+																				// if
+																				// newly
+																				// created
+																				// word
+																				// is
+																				// in
+																				// the
+																				// dictionary
+																				// or
+																				// not
 					Node<String> newnode = root.add(chkword);
 					visitedWords.add(chkword);
 					Queue block = new Queue(chkword, newnode);
@@ -259,19 +326,23 @@ public class Main {
 		}
 		return words;
 	}
+
 	/**
 	 * print the given word ladder
-	 * @param ladder array of strings that is the ladder to be printed
+	 * 
+	 * @param ladder
+	 *            array of strings that is the ladder to be printed
 	 */
 	public static void printLadder(ArrayList<String> ladder) {
-		if (noLadder) {//static variable set to true if no ladder was found
+		if (noLadder) {// static variable set to true if no ladder was found
 			System.out.println("no word ladder can be found between " + ladder.get(0).toLowerCase() + " and "
 					+ ladder.get(1).toLowerCase() + ".");
 			return;
 		}
-		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between " + ladder.get(0).toLowerCase() + " and "
-				+ ladder.get(ladder.size() - 1).toLowerCase() + ".");
-		for (int i = 0; i < ladder.size(); i++) {//print out words, they are stored in reverse order
+		System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between "
+				+ ladder.get(0).toLowerCase() + " and " + ladder.get(ladder.size() - 1).toLowerCase() + ".");
+		for (int i = 0; i < ladder.size(); i++) {// print out words, they are
+													// stored in reverse order
 			System.out.println(ladder.get(i).toLowerCase());
 		}
 	}
